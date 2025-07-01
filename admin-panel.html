@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Админ панель - VOLT</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .admin-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: var(--card-bg);
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .admin-title {
+            color: var(--accent-color);
+            font-size: 28px;
+            margin: 0;
+        }
+        .admin-nav {
+            display: flex;
+            gap: 15px;
+        }
+        .admin-nav a {
+            padding: 10px 20px;
+            background: var(--accent-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+        .admin-nav a:hover {
+            background: var(--accent-hover);
+        }
+        .admin-nav a.active {
+            background: var(--accent-hover);
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--card-bg);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .data-table th,
+        .data-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .data-table th {
+            background: var(--accent-color);
+            color: white;
+            font-weight: 600;
+        }
+        .data-table tr:hover {
+            background: var(--hover-bg);
+        }
+        .action-buttons {
+            display: flex;
+            gap: 5px;
+        }
+        .btn {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 12px;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+        .btn-edit {
+            background: #3498db;
+            color: white;
+        }
+        .btn-delete {
+            background: #e74c3c;
+            color: white;
+        }
+        .btn-add {
+            background: #27ae60;
+            color: white;
+            padding: 10px 20px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+        .modal-content {
+            background: var(--card-bg);
+            margin: 5% auto;
+            padding: 20px;
+            border-radius: 10px;
+            width: 80%;
+            max-width: 500px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .modal-title {
+            color: var(--accent-color);
+            margin: 0;
+        }
+        .close {
+            color: var(--text-muted);
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .close:hover {
+            color: var(--text-color);
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--text-color);
+            font-weight: 500;
+        }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            background: var(--bg-color);
+            color: var(--text-color);
+            box-sizing: border-box;
+        }
+        .form-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+        .btn-cancel {
+            background: var(--text-muted);
+            color: white;
+        }
+        .btn-save {
+            background: var(--accent-color);
+            color: white;
+        }
+        .queries-section {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .queries-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .query-card {
+            background: var(--bg-color);
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+        .query-card h3 {
+            color: var(--accent-color);
+            margin: 0 0 10px 0;
+            font-size: 16px;
+        }
+        .query-card p {
+            color: var(--text-muted);
+            margin: 0 0 15px 0;
+            font-size: 14px;
+        }
+        .query-card a {
+            background: var(--accent-color);
+            color: white;
+            padding: 8px 16px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 14px;
+            display: inline-block;
+        }
+        .query-card a:hover {
+            background: var(--accent-hover);
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .stat-card {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .stat-number {
+            font-size: 32px;
+            font-weight: bold;
+            color: var(--accent-color);
+            margin-bottom: 5px;
+        }
+        .stat-label {
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <div class="admin-header">
+            <h1 class="admin-title">Админ панель VOLT</h1>
+            <div class="admin-nav">
+                <a href="#" class="nav-link active" data-tab="dashboard">Дашборд</a>
+                <a href="#" class="nav-link" data-tab="users">Пользователи</a>
+                <a href="#" class="nav-link" data-tab="services">Услуги</a>
+                <a href="#" class="nav-link" data-tab="orders">Заказы</a>
+                <a href="#" class="nav-link" data-tab="feedback">Отзывы</a>
+                <a href="#" class="nav-link" data-tab="queries">SQL Запросы</a>
+                <a href="php/logout.php">Выйти</a>
+            </div>
+        </div>
+
+        <!-- Дашборд -->
+        <div id="dashboard" class="tab-content active">
+            <h2>Статистика</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number" id="total-users">-</div>
+                    <div class="stat-label">Пользователей</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="total-services">-</div>
+                    <div class="stat-label">Услуг</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="total-orders">-</div>
+                    <div class="stat-label">Заказов</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="active-orders">-</div>
+                    <div class="stat-label">Активных заказов</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Пользователи -->
+        <div id="users" class="tab-content">
+            <h2>Управление пользователями</h2>
+            <button class="btn btn-add" onclick="showAddModal('users')">Добавить пользователя</button>
+            <div id="users-table"></div>
+        </div>
+
+        <!-- Услуги -->
+        <div id="services" class="tab-content">
+            <h2>Управление услугами</h2>
+            <button class="btn btn-add" onclick="showAddModal('services')">Добавить услугу</button>
+            <div id="services-table"></div>
+        </div>
+
+        <!-- Заказы -->
+        <div id="orders" class="tab-content">
+            <h2>Управление заказами</h2>
+            <button class="btn btn-add" onclick="showAddModal('orders')">Добавить заказ</button>
+            <div id="orders-table"></div>
+        </div>
+
+        <!-- Отзывы -->
+        <div id="feedback" class="tab-content">
+            <h2>Управление отзывами</h2>
+            <div id="feedback-table"></div>
+        </div>
+
+        <!-- SQL Запросы -->
+        <div id="queries" class="tab-content">
+            <h2>Аналитические SQL запросы</h2>
+            <div class="queries-section">
+                <p>Выберите один из 10 аналитических запросов для получения данных:</p>
+                <div class="queries-grid">
+                    <div class="query-card">
+                        <h3>1. Устройства в ремонте</h3>
+                        <p>Список всех устройств, находящихся в ремонте с данными заказчика</p>
+                        <a href="php/queries.php?query=1&execute=1">Выполнить</a>
+                    </div>
+                    <div class="query-card">
+                        <h3>2. Заказы техника</h3>
+                        <p>Список всех ремонтных заказов, выполненных определенным техником</p>
+                        <a href="php/queries.php?query=2&execute=1">Выполнить</a>
+                    </div>
+                    <div class="query-card">
+                        <h3>3. Истекшая гарантия</h3>
+                        <p>Список всех устройств, у которых гарантия истекла</p>
+                        <a href="php/queries.php?query=3&execute=1">Выполнить</a>
+                    </div>
+                    <div class="query-card">
+                        <h3>4. Активные клиенты</h3>
+                        <p>Список всех клиентов, у которых есть активные ремонтные заказы</p>
+                        <a href="php/queries.php?query=4&execute=1">Выполнить</a>
+                    </div>
+                    <div class="query-card">
+                        <h3>5. Ремонты техника</h3>
+                        <p>Список всех устройств, которые были отремонтированы определенным техником</p>
+                        <a href="php/queries.php?query=5&execute=1">Выполнить</a>
+                    </div>
+                    <div class="query-card">
+                        <h3>6. Заказы по периоду</h3>
+                        <p>Список всех ремонтных заказов, завершенных в заданный период</p>
+                        <a href="php/queries.php?query=6&execute=1">Выполнить</a>
+                    </div>
+                    <div class="query-card">
+                        <h3>7. Неисправности компонентов</h3>
+                        <p>Список всех устройств с неисправностью определенного компонента</p>
+                        <a href="php/queries.php?query=7&execute=1">Выполнить</a>
+                    </div>
+                    <div class="query-card">
+                        <h3>8. Статистика по типам</h3>
+                        <p>Список всех устройств, сгруппированных по типу</p>
+                        <a href="php/queries.php?query=8&execute=1">Выполнить</a>
+                    </div>
+                    <div class="query-card">
+                        <h3>9. Статистика по статусам</h3>
+                        <p>Список всех ремонтных заказов, сгруппированных по статусу</p>
+                        <a href="php/queries.php?query=9&execute=1">Выполнить</a>
+                    </div>
+                    <div class="query-card">
+                        <h3>10. Заказы производителя</h3>
+                        <p>Список всех ремонтных заказов устройств определенного производителя</p>
+                        <a href="php/queries.php?query=10&execute=1">Выполнить</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальные окна -->
+    <div id="addModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle">Добавить запись</h3>
+                <span class="close" onclick="closeModal()">&times;</span>
+            </div>
+            <form id="addForm">
+                <div id="formFields"></div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-cancel" onclick="closeModal()">Отмена</button>
+                    <button type="submit" class="btn btn-save">Сохранить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // Навигация по вкладкам
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const tab = this.getAttribute('data-tab');
+                
+                // Убираем активный класс у всех ссылок и вкладок
+                document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+                
+                // Добавляем активный класс к выбранной ссылке и вкладке
+                this.classList.add('active');
+                document.getElementById(tab).classList.add('active');
+                
+                // Загружаем данные для вкладки
+                if (tab !== 'dashboard' && tab !== 'queries') {
+                    loadTableData(tab);
+                }
+            });
+        });
+
+        // Загрузка данных таблицы
+        function loadTableData(table) {
+            fetch(`php/admin.php?action=list&table=${table}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        console.error('Ошибка загрузки данных:', data.error);
+                        return;
+                    }
+                    displayTable(table, data.data);
+                })
+                .catch(error => {
+                    console.error('Ошибка:', error);
+                });
+        }
+
+        // Отображение таблицы
+        function displayTable(table, data) {
+            const container = document.getElementById(`${table}-table`);
+            if (!data || data.length === 0) {
+                container.innerHTML = '<p>Данные не найдены</p>';
+                return;
+            }
+
+            const columns = Object.keys(data[0]);
+            let html = '<table class="data-table"><thead><tr>';
+            
+            // Заголовки
+            columns.forEach(column => {
+                html += `<th>${column.charAt(0).toUpperCase() + column.slice(1)}</th>`;
+            });
+            html += '<th>Действия</th></tr></thead><tbody>';
+            
+            // Данные
+            data.forEach(row => {
+                html += '<tr>';
+                columns.forEach(column => {
+                    html += `<td>${row[column] || ''}</td>`;
+                });
+                html += `<td class="action-buttons">
+                    <button class="btn btn-edit" onclick="editRow('${table}', ${row.id})">Изменить</button>
+                    <button class="btn btn-delete" onclick="deleteRow('${table}', ${row.id})">Удалить</button>
+                </td></tr>`;
+            });
+            
+            html += '</tbody></table>';
+            container.innerHTML = html;
+        }
+
+        // Показать модальное окно добавления
+        function showAddModal(table) {
+            const modal = document.getElementById('addModal');
+            const title = document.getElementById('modalTitle');
+            const formFields = document.getElementById('formFields');
+            
+            title.textContent = `Добавить ${getTableName(table)}`;
+            
+            // Генерируем поля формы в зависимости от таблицы
+            let fields = '';
+            switch(table) {
+                case 'users':
+                    fields = `
+                        <div class="form-group">
+                            <label>Имя</label>
+                            <input type="text" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Телефон</label>
+                            <input type="text" name="phone">
+                        </div>
+                        <div class="form-group">
+                            <label>Пароль</label>
+                            <input type="password" name="password" required>
+                        </div>
+                    `;
+                    break;
+                case 'services':
+                    fields = `
+                        <div class="form-group">
+                            <label>Название</label>
+                            <input type="text" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Цена</label>
+                            <input type="number" name="price" required>
+                        </div>
+                    `;
+                    break;
+                case 'orders':
+                    fields = `
+                        <div class="form-group">
+                            <label>Пользователь ID</label>
+                            <input type="number" name="user_id" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Услуга ID</label>
+                            <input type="number" name="service_id" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Устройство</label>
+                            <input type="text" name="device" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Комментарий</label>
+                            <textarea name="comment"></textarea>
+                        </div>
+                    `;
+                    break;
+            }
+            
+            formFields.innerHTML = fields;
+            modal.style.display = 'block';
+            
+            // Обработчик отправки формы
+            document.getElementById('addForm').onsubmit = function(e) {
+                e.preventDefault();
+                const formData = new FormData(this);
+                const data = {};
+                formData.forEach((value, key) => data[key] = value);
+                
+                fetch('php/admin.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        action: 'add',
+                        table: table,
+                        data: data
+                    })
+                })
+                .then(response => response.json())
+                .then(result => {
+                    if (result.success) {
+                        closeModal();
+                        loadTableData(table);
+                    } else {
+                        alert('Ошибка при добавлении записи');
+                    }
+                });
+            };
+        }
+
+        // Закрыть модальное окно
+        function closeModal() {
+            document.getElementById('addModal').style.display = 'none';
+        }
+
+        // Получить название таблицы
+        function getTableName(table) {
+            const names = {
+                'users': 'пользователя',
+                'services': 'услугу',
+                'orders': 'заказ',
+                'feedback': 'отзыв'
+            };
+            return names[table] || 'запись';
+        }
+
+        // Удалить строку
+        function deleteRow(table, id) {
+            if (confirm('Вы уверены, что хотите удалить эту запись?')) {
+                fetch('php/admin.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        action: 'delete',
+                        table: table,
+                        data: { id: id }
+                    })
+                })
+                .then(response => response.json())
+                .then(result => {
+                    if (result.success) {
+                        loadTableData(table);
+                    } else {
+                        alert('Ошибка при удалении записи');
+                    }
+                });
+            }
+        }
+
+        // Загрузить статистику при загрузке страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            // Здесь можно добавить загрузку статистики для дашборда
+            loadTableData('users');
+        });
+    </script>
+</body>
+</html> 

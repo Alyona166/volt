@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Личный кабинет — VOLT</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="logo.png">
+</head>
+<body>
+  <header class="header">
+    <div class="header__top">
+      <div class="header__logo header__logo--left">
+        <img src="logo.png" alt="VOLT logo">
+      </div>
+      <div class="header__contacts header__contacts--big">
+        <div class="header__contact-item">
+          <span class="icon-phone"></span>
+          <a href="tel:+79090909090">+7 (909) 090-90-90</a>
+        </div>
+        <div class="header__contact-item">
+          <span class="icon-location"></span>
+          <span>Москва, ул. Можайская 10</span>
+        </div>
+      </div>
+      <div class="header__actions">
+        <span id="user-info" style="display: none;">
+          <span id="user-name"></span>
+          <a href="php/logout.php" class="btn btn--small">Выйти</a>
+        </span>
+        <span id="guest-actions">
+          <a href="register.html" class="btn btn--small">Регистрация</a>
+          <a href="login.html" class="btn btn--small">Авторизация</a>
+        </span>
+        <button type="button" class="btn btn--small" onclick="showAdminAuthModal()">Админ-панель</button>
+      </div>
+      <button id="theme-toggle" class="theme-toggle" aria-label="Переключить тему"><span id="theme-icon">🌙</span></button>
+    </div>
+    <nav class="nav">
+      <ul class="nav__list">
+        <li><a href="index.html" class="nav__link">Главная</a></li>
+        <li><a href="prices.html" class="nav__link">Цена</a></li>
+        <li><a href="contacts.html" class="nav__link">Контакты</a></li>
+        <li><a href="faq.html" class="nav__link">FAQ</a></li>
+      </ul>
+    </nav>
+  </header>
+  <button id="theme-toggle" class="theme-toggle" aria-label="Переключить тему"></button>
+  <main class="main main--cabinet">
+    <section class="cabinet">
+      <h1 class="section-title">Личный кабинет</h1>
+      <div class="cabinet__tabs">
+        <button class="cabinet__tab cabinet__tab--active" data-tab="requests">Мои заявки</button>
+        <button class="cabinet__tab" data-tab="status">Статус ремонта</button>
+      </div>
+      <div class="cabinet__actions">
+        <button class="btn" id="order-create-open">Создать заявку</button>
+      </div>
+      <div class="cabinet__content">
+        <div class="cabinet__panel cabinet__panel--active" id="tab-requests">
+          <div class="cabinet__card">
+            <table class="cabinet__table">
+              <thead>
+                <tr>
+                  <th>Услуга</th>
+                  <th>Устройство</th>
+                  <th>Статус</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Данные подгружаются динамически -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="cabinet__panel" id="tab-status">
+          <div class="cabinet__card">
+            <table class="cabinet__table">
+              <thead>
+                <tr>
+                  <th>Услуга</th>
+                  <th>Устройство</th>
+                  <th>Статус</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Данные подгружаются динамически -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <!-- Модальное окно создания заявки -->
+      <div class="modal" id="order-create-modal" aria-hidden="true">
+        <div class="modal__overlay" id="order-create-overlay"></div>
+        <div class="modal__content">
+          <button class="modal__close" id="order-create-close" aria-label="Закрыть окно">×</button>
+          <h2 class="modal__title">Новая заявка</h2>
+          <form class="form" id="order-create-form" autocomplete="off" novalidate>
+            <div class="form__group">
+              <label for="order-service">Услуга</label>
+              <select id="order-service" name="service_id" required></select>
+              <span class="form__error"></span>
+            </div>
+            <div class="form__group">
+              <label for="order-device">Устройство</label>
+              <input type="text" id="order-device" name="device" required maxlength="60" placeholder="Например, iPhone 12">
+              <span class="form__error"></span>
+            </div>
+            <div class="form__group">
+              <label for="order-comment">Комментарий</label>
+              <textarea id="order-comment" name="comment" maxlength="300" placeholder="Опишите проблему (необязательно)" rows="3"></textarea>
+            </div>
+            <button type="submit" class="btn form__submit">Отправить заявку</button>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+  <footer class="footer">
+    <div class="footer__info">
+      <span>© 2025 VOLT</span>
+      <a href="tel:+79090909090">+7 (909) 090-90-90</a>
+      <a href="mailto:info@volt.ru">info@volt.ru</a>
+    </div>
+    <nav class="footer__nav">
+      <ul>
+        <li><a href="index.html">Главная</a></li>
+        <li><a href="prices.html">Цена</a></li>
+        <li><a href="contacts.html">Контакты</a></li>
+        <li><a href="faq.html">FAQ</a></li>
+      </ul>
+    </nav>
+  </footer>
+  <script src="script.js"></script>
+  <script src="admin-auth.js"></script>
+</body>
+</html> 

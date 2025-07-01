@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Контакты — VOLT</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="logo.png">
+</head>
+<body>
+  <header class="header">
+    <div class="header__top">
+      <div class="header__logo header__logo--left">
+        <img src="logo.png" alt="VOLT logo">
+      </div>
+      <div class="header__contacts header__contacts--big">
+        <div class="header__contact-item">
+          <span class="icon-phone"></span>
+          <a href="tel:+79090909090">+7 (909) 090-90-90</a>
+        </div>
+        <div class="header__contact-item">
+          <span class="icon-location"></span>
+          <span>Москва, ул. Можайская 10</span>
+        </div>
+      </div>
+      <div class="header__actions">
+        <span id="user-info" style="display: none;">
+          <span id="user-name"></span>
+          <a href="php/logout.php" class="btn btn--small">Выйти</a>
+        </span>
+        <span id="guest-actions">
+          <a href="register.html" class="btn btn--small">Регистрация</a>
+          <a href="login.html" class="btn btn--small">Авторизация</a>
+        </span>
+        <button type="button" class="btn btn--small" onclick="showAdminAuthModal()">Админ-панель</button>
+      </div>
+      <button id="theme-toggle" class="theme-toggle" aria-label="Переключить тему"><span id="theme-icon">🌙</span></button>
+    </div>
+    <nav class="nav">
+      <ul class="nav__list">
+        <li><a href="index.html" class="nav__link">Главная</a></li>
+        <li><a href="prices.html" class="nav__link">Цена</a></li>
+        <li><a href="contacts.html" class="nav__link nav__link--active">Контакты</a></li>
+        <li><a href="faq.html" class="nav__link">FAQ</a></li>
+      </ul>
+    </nav>
+  </header>
+  <button id="theme-toggle" class="theme-toggle" aria-label="Переключить тему"></button>
+  <main class="main main--contacts">
+    <section class="contacts-main-section">
+      <h2 class="contacts-title">Связаться с нами</h2>
+      <div class="contacts-flex">
+        <div class="contacts-info">
+          <div class="contacts-row"><span class="contacts-icon">📍</span> <span>Адрес: г. Москва, ул. Можайская 10</span></div>
+          <div class="contacts-row"><span class="contacts-icon">📞</span> <span>Телефон: <a href="tel:+79090909090">+7 (909) 090-90-90</a></span></div>
+          <div class="contacts-row"><span class="contacts-icon">✉️</span> <span>E-mail: <a href="mailto:info@volt.ru">info@volt.ru</a></span></div>
+          <div class="contacts-row"><span class="contacts-icon">⏰</span> <span>Время работы: Пн–Сб, 10:00–20:00</span></div>
+        </div>
+        <div class="contacts-map-wrap">
+          <div class="contacts-map-title">Мы на карте</div>
+          <div id="yandex-map"></div>
+        </div>
+      </div>
+    </section>
+    <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
+    <script>
+      ymaps.ready(function () {
+        var map = new ymaps.Map('yandex-map', {
+          center: [55.7156, 37.4977],
+          zoom: 16
+        });
+        map.geoObjects.add(new ymaps.Placemark([55.7156, 37.4977], {
+          balloonContent: 'VOLT — сервисный центр, г. Москва, ул. Можайская 10'
+        }));
+      });
+    </script>
+  </main>
+  <footer class="footer">
+    <div class="footer__info">
+      <span>© 2025 VOLT</span>
+      <a href="tel:+79090909090">+7 (909) 090-90-90</a>
+      <a href="mailto:info@volt.ru">info@volt.ru</a>
+    </div>
+    <nav class="footer__nav">
+      <ul>
+        <li><a href="index.html">Главная</a></li>
+        <li><a href="prices.html">Цена</a></li>
+        <li><a href="contacts.html">Контакты</a></li>
+        <li><a href="faq.html">FAQ</a></li>
+      </ul>
+    </nav>
+  </footer>
+  <script src="script.js"></script>
+  <script src="admin-auth.js"></script>
+</body>
+</html> 

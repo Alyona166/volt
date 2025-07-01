@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VOLT — Сервисный центр</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="logo.png">
+</head>
+<body>
+    <header class="header">
+        <div class="header__container">
+            <!-- Удаляю надпись VOLT -->
+            <!-- <a href="index.html" class="logo">VOLT</a> -->
+            <button id="theme-toggle" class="theme-toggle" aria-label="Переключить тему"><span id="theme-icon">🌙</span></button>
+            <div class="header__top">
+                <div class="header__logo header__logo--left">
+                    <img src="logo.png" alt="VOLT logo">
+                </div>
+                <div class="header__contacts header__contacts--big">
+                    <div class="header__contact-item">
+                        <span class="icon-phone"></span>
+                        <a href="tel:+79090909090">+7 (909) 090-90-90</a>
+                    </div>
+                    <div class="header__contact-item">
+                        <span class="icon-location"></span>
+                        <span>Москва, ул. Можайская 10</span>
+                    </div>
+                </div>
+                <div class="header__actions">
+                    <span id="user-info" style="display: none;">
+                        <span id="user-name"></span>
+                        <a href="php/logout.php" class="btn btn--small">Выйти</a>
+                    </span>
+                    <span id="guest-actions">
+                        <a href="register.html" class="btn btn--small">Регистрация</a>
+                        <a href="login.html" class="btn btn--small">Авторизация</a>
+                    </span>
+                    <button type="button" class="btn btn--small" onclick="showAdminAuthModal()">Админ-панель</button>
+                </div>
+            </div>
+            <nav class="nav">
+                <ul class="nav__list">
+                    <li><a href="index.html" class="nav__link nav__link--active">Главная</a></li>
+                    <li><a href="prices.html" class="nav__link">Цена</a></li>
+                    <li><a href="contacts.html" class="nav__link">Контакты</a></li>
+                    <li><a href="faq.html" class="nav__link">FAQ</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <main class="main main--home">
+        <section class="services-slider">
+            <h1 class="section-title">Наши услуги</h1>
+            <div class="slider-container">
+                <button class="slider-prev" aria-label="Предыдущий слайд">‹</button>
+                <div class="slider-content">
+                    <div class="service-slide">
+                        <div class="service-card">
+                            <div class="service-icon">📱</div>
+                            <h3>Ремонт смартфонов</h3>
+                            <p>Замена экранов, ремонт материнских плат, замена батарей и другие услуги для всех моделей iPhone и Android</p>
+                            <div class="service-price">от 2000 ₽</div>
+                            <a href="prices.html" class="btn btn--small">Подробнее</a>
+                        </div>
+                    </div>
+                    <div class="service-slide">
+                        <div class="service-card">
+                            <div class="service-icon">💻</div>
+                            <h3>Ремонт ноутбуков</h3>
+                            <p>Диагностика, замена комплектующих, чистка от пыли, ремонт материнских плат для всех брендов</p>
+                            <div class="service-price">от 1500 ₽</div>
+                            <a href="prices.html" class="btn btn--small">Подробнее</a>
+                        </div>
+                    </div>
+                    <div class="service-slide">
+                        <div class="service-card">
+                            <div class="service-icon">🖥️</div>
+                            <h3>Ремонт компьютеров</h3>
+                            <p>Сборка ПК, замена деталей, настройка системы, удаление вирусов и оптимизация работы</p>
+                            <div class="service-price">от 1000 ₽</div>
+                            <a href="prices.html" class="btn btn--small">Подробнее</a>
+                        </div>
+                    </div>
+                    <div class="service-slide">
+                        <div class="service-card">
+                            <div class="service-icon">🏠</div>
+                            <h3>Бытовая техника</h3>
+                            <p>Ремонт стиральных машин, холодильников, микроволновок и другой бытовой техники</p>
+                            <div class="service-price">от 3000 ₽</div>
+                            <a href="prices.html" class="btn btn--small">Подробнее</a>
+                        </div>
+                    </div>
+                </div>
+                <button class="slider-next" aria-label="Следующий слайд">›</button>
+            </div>
+            <div class="slider-dots">
+                <button class="slider-dot active" aria-label="Слайд 1"></button>
+                <button class="slider-dot" aria-label="Слайд 2"></button>
+                <button class="slider-dot" aria-label="Слайд 3"></button>
+                <button class="slider-dot" aria-label="Слайд 4"></button>
+            </div>
+        </section>
+        <!-- Слайдер отзывов -->
+        <section class="slider-section">
+            <h2 class="slider-title">Отзывы клиентов</h2>
+            <div class="slider" id="reviews-slider">
+                <div class="slide active">
+                    <div class="slide-content">
+                        <img src="logo.png" alt="Аватар" class="slide-avatar">
+                        <div>
+                            <div class="slide-name">Пётр Петров</div>
+                            <div class="slide-text">Спасибо за быстрый ремонт! Всё сделали за день, очень доволен сервисом.</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slide">
+                    <div class="slide-content">
+                        <img src="logo.png" alt="Аватар" class="slide-avatar">
+                        <div>
+                            <div class="slide-name">Анна Сидорова</div>
+                            <div class="slide-text">Вежливые мастера, всё объяснили и починили ноутбук. Рекомендую!</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slide">
+                    <div class="slide-content">
+                        <img src="logo.png" alt="Аватар" class="slide-avatar">
+                        <div>
+                            <div class="slide-name">Иван Иванов</div>
+                            <div class="slide-text">Отличная работа, буду обращаться ещё. Спасибо!</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="slider-controls">
+                <button class="slider-btn" id="slider-prev">&#8592;</button>
+                <button class="slider-btn" id="slider-next">&#8594;</button>
+            </div>
+        </section>
+    </main>
+    <footer class="footer">
+        <div class="footer__info">
+            <span>© 2025 VOLT</span>
+            <a href="tel:+79090909090">+7 (909) 090-90-90</a>
+            <a href="mailto:info@volt.ru">info@volt.ru</a>
+        </div>
+        <nav class="footer__nav">
+            <ul>
+                <li><a href="index.html">Главная</a></li>
+                <li><a href="prices.html">Цена</a></li>
+                <li><a href="contacts.html">Контакты</a></li>
+                <li><a href="faq.html">FAQ</a></li>
+            </ul>
+        </nav>
+    </footer>
+    <!-- Удаляю кнопку и модальное окно обратной связи -->
+    <!-- <button class="feedback-btn" id="feedback-open">Обратная связь</button> -->
+    <!-- <div class="modal" id="feedback-modal" aria-hidden="true">...</div> -->
+    <script src="script.js"></script>
+    <script src="admin-auth.js"></script>
+</body>
+</html> 
